@@ -1,0 +1,25 @@
+<!--
+    @description       : 
+    @author            : Amit Singh
+    @group             : 
+    @last modified on  : 09-15-2021
+    @last modified by  : Amit Singh
+-->
+<template>
+    <div class="footerContent ">
+        <p class="titleCase"> Quick Links </p>
+        <lightning-layout multiple-rows>
+            <template if:true={__footerContents} for:each={__footerContents} for:item="contenet" for:index="index">
+                <lightning-layout-item key={contenet.Id} size="12" padding="around-small" small-device-size="12" medium-device-size="6" large-device-size="4" >
+                    
+                    <div class="custom-box">
+                        <p class="slds-var-p-around_small" > {contenet.Name} </p>
+                        <lightning-formatted-rich-text
+                            value={contenet.Content__c}>
+                        </lightning-formatted-rich-text>
+                    </div>
+                </lightning-layout-item>
+            </template>
+        </lightning-layout>
+    </div>
+</template>

@@ -1,0 +1,36 @@
+<!--
+    @description       : 
+    @author            : Amit Singh
+    @group             : 
+    @last modified on  : 09-17-2021
+    @last modified by  : Amit Singh
+-->
+<template>
+    <lightning-spinner alternative-text="Loading" size="small" variant="brand" if:true={__isSpinnerActive}></lightning-spinner>
+    <div >
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="12">
+                <lightning-input type="text" variant="standard" max-length="80" onchange={handleChange} name="Name" label="Full Name" required></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="12">
+                <lightning-input type="email" variant="standard" onchange={handleChange} name="Email" label="Email" required></lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="12">
+                <lightning-input type="text" variant="standard" onchange={handleChange} 
+                    name="Subject" label="Subject" max-length="80" required>
+                </lightning-input>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="12">
+                <lightning-textarea name="Message" label="Message" required onchange={handleChange}
+                    max-length="200"
+                    field-level-help ="Provide your query here">
+                </lightning-textarea>
+            </lightning-layout-item>
+        </lightning-layout>
+        <div class="slds-var-p-around_small">
+            <lightning-button variant="destructive" label="Cancel" title="Cancel" onclick={handleCancel}></lightning-button>
+            &nbsp; &nbsp;
+            <lightning-button icon-name="standard:email" variant="brand" label="Send Message" title="Send Message" onclick={handleSend}></lightning-button>
+        </div>
+    </div>
+</template>

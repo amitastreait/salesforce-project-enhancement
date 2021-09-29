@@ -1,0 +1,33 @@
+{
+  "orgName": "TechFuge Indua Pvt. Ltd.",
+  "edition": "Enterprise",
+  "features": ["Communities", "ServiceCloud", "PersonAccounts", "MultiCurrency","B2BCommerce"],
+  "hasSampleData": true,
+  "settings": {
+      "communitiesSettings": {
+          "enableNetworksEnabled": true
+      },
+      "mobileSettings": {
+          "enableS1EncryptedStoragePref2": true
+      },
+      "omniChannelSettings": {
+          "enableOmniChannel": true
+      },
+      "caseSettings": {
+          "systemUserEmail": "amitsingh@techfuge.in"
+      }
+  },
+  "objectSettings": {
+      "opportunity": {
+        "sharingModel": "private",
+        "defaultRecordType": "default"
+      },
+      "account": {
+        "defaultRecordType": "default"
+      },
+      "case": {
+        "sharingModel": "private",
+        "defaultRecordType": "default"
+      }
+  }
+}

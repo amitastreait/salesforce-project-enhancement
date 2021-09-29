@@ -1,0 +1,33 @@
+<!--
+    @description       : 
+    @author            : Amit Singh
+    @group             : 
+    @last modified on  : 09-14-2021
+    @last modified by  : Amit Singh
+    mainDiv eventDiv eventStyle 
+-->
+<template>
+    <lightning-card variant="Narrow" >
+        <!-- Upcoming Events -->
+        
+        <div class="slds-var-p-around_large slds-text-heading_large">Upcoming Events</div>
+        <hr/>
+        <lightning-layout vertical-align="center" multiple-rows>
+            <template if:true={upcomingEvnets} for:each={upcomingEvnets} for:item="event" for:index="index">
+                <lightning-layout-item key={event.Id} size="12" padding="around-small" small-device-size="12" medium-device-size="6" large-device-size="4" >
+                    <c-event-tile event={event} image-url={images.event} onselect={handleEventClick} ></c-event-tile>
+                </lightning-layout-item>
+            </template>
+        </lightning-layout>
+        <!-- Past Events -->
+        <hr/>
+        <div class="slds-var-p-around_large slds-text-heading_large">Past Events</div>
+        <lightning-layout multiple-rows>
+            <template if:true={pastEvents} for:each={pastEvents} for:item="event" for:index="index">
+                <lightning-layout-item key={event.Id} size="12" padding="around-small" small-device-size="12" medium-device-size="6" large-device-size="4" >
+                    <c-event-tile event={event} image-url={images.event} onselect={handleEventClick} ></c-event-tile>
+                </lightning-layout-item>
+            </template>
+        </lightning-layout>
+    </lightning-card>
+</template>

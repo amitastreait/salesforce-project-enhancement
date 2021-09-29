@@ -1,0 +1,206 @@
+<!--
+    @description       : 
+    @author            : Amit Singh
+    @group             : 
+    @last modified on  : 09-29-2021
+    @last modified by  : Amit Singh
+-->
+<template>
+    <div class="slds-var-p-around_large">
+        <lightning-spinner alternative-text="Loading" size="small" if:true={isSpinner}></lightning-spinner>
+        <template if:true={__eventDetails}>
+            <!-- Event Title -->
+            <div class="eventTitle slds-var-p-around_large">
+                <p>{__eventDetails.Name__c}</p>
+                <p>
+                    <lightning-formatted-date-time value={__eventDetails.Start_DateTime__c} year="numeric" month="numeric" 
+                        day="numeric" hour="2-digit" minute="2-digit" 
+                        time-zone="IST" time-zone-name="short" hour12="true">
+                    </lightning-formatted-date-time>
+                </p>
+            </div>
+
+            <!-- Event RSVP Modal start -->
+
+            <div class="custom-modal" if:true={__showModal} >
+                <section role="dialog" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium slds-hyphenate">RSVP Now</h2>
+                        </header>
+                        <div class="slds-modal__content slds-var-p-around_medium">
+                            <!-- eventId => event-id eventRecordId =? event-record-id
+                                eventID => event-i-d -->
+                            <c-rsvp-component event-id={__eventDetails.Id} onsuccess={handleRsvpSuccess} oncancel={handleCancel} ></c-rsvp-component>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+
+            <!-- Event RSVP Modal End -->
+
+            <!-- Event RSVP -->
+            <div class="rsvp slds-var-p-around_large">
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="12" padding="around-small" 
+                        small-device-size="12" medium-device-size="6" large-device-size="4" >
+                            The event is accepting RSVPs and the last date to RSVP is 
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" padding="around-small" small-device-size="12" 
+                        medium-device-size="6" large-device-size="4">
+                            <lightning-formatted-date-time value={__eventDetails.Start_DateTime__c} year="numeric" month="numeric" 
+                                day="numeric" hour="2-digit" minute="2-digit" 
+                                time-zone="IST" time-zone-name="short" hour12="true">
+                            </lightning-formatted-date-time>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" padding="around-small" small-device-size="12" 
+                        medium-device-size="6" large-device-size="4">
+                            <!-- check if the event is completed  -->
+                            <template if:true={__eventDetails.EventCompleted__c} >
+                                <p>
+                                    Event has been completed.
+                                </p>
+                            </template>
+                            <template if:false={__eventDetails.EventCompleted__c} >
+                                <template if:true={__rsvpCompleted}>
+                                    <p>You are attending the event</p>
+                                    <a class="slds-button slds-button_neutral" href="JavaScript:void(0);" >
+                                        un-rsvp from the event
+                                    </a>
+                                </template>
+                                <template if:false={__rsvpCompleted}>
+                                    <template if:true={__showRsvpButton}>
+                                        <lightning-button variant="brand" label="RSVP Now" title="RSVP Now" 
+                                            onclick={handleRSVP}>
+                                        </lightning-button>
+                                    </template>
+                                    <template if:false={__showRsvpButton}>
+                                        <lightning-button variant="brand" label="Login to RSVP" title="Login" 
+                                            onclick={handleLoginRedirect}>
+                                        </lightning-button>
+                                    </template>
+                                </template>
+                            </template>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+            <!-- Event Details -->
+            <div class="eventDetails slds-var-p-around_large">
+                <lightning-formatted-rich-text
+                    value={__eventDetails.Event_Detail__c}>
+                </lightning-formatted-rich-text>
+            </div>
+            <!-- Event Location -->
+            <div class="location slds-var-p-around_large">
+                <template if:false={__eventDetails.Location__c}>
+                    <p>This is a virtual event!</p>
+                </template>
+                <template if:true={__eventDetails.Location__c}>
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="6" large-device-size="6" >
+                            <lightning-formatted-address
+                                street={__eventDetails.Location__r.Street__c}
+                                city={__eventDetails.Location__r.City__c}
+                                country={__eventDetails.Location__r.Country__c}
+                                province={__eventDetails.Location__r.State__c}
+                                postal-code={__eventDetails.Location__r.Postal_Code__c}
+                            >
+                            </lightning-formatted-address>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="6" large-device-size="6">
+                            <lightning-map
+                                markers-title="Event Location"
+                                zoom-level="16"
+                                map-markers={__mapMarkers}>
+                            </lightning-map>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </template>
+            </div>
+            <!-- Event Speakers -->
+            <div class="speaker slds-var-p-around_large">
+                <p class="titleCalse">
+                    Speakers
+                </p>
+                <lightning-layout multiple-rows>
+                    <template if:true={__speakers} for:each={__speakers} for:item="speaker" for:index="index">
+                        <lightning-layout-item key={speaker.Id} size="12" padding="around-small" small-device-size="12" medium-device-size="6" large-device-size="4" >
+                            <p>
+                                <template if:true={speaker.Speaker__r.Picture__c}>
+                                    <img class="titlePhoto" src={speaker.Speaker__r.Picture__c} alt="Event Speaker">
+                                </template>
+                                <template if:false={speaker.Speaker__r.Picture__c}>
+                                    <img class="titlePhoto" src={images.speaker} alt="Event Speaker">
+                                </template>
+                            </p>
+                            <p>
+                                {speaker.Speaker__r.Name}
+                            </p>
+                            <p>
+                                {speaker.Speaker__r.Company__c}
+                            </p>
+                            <p>
+                                <lightning-formatted-rich-text
+                                    value={speaker.Speaker__r.About_Me__c}>
+                                </lightning-formatted-rich-text>
+                            </p>
+                        </lightning-layout-item>
+                    </template>
+                </lightning-layout>
+            </div>
+            <!-- Event Organizers -->
+            <div class="speaker slds-var-p-around_large">
+                <p class="titleCalse" >Event Organizer </p>
+                <p>
+                    <template if:false={__eventDetails.Event_Organizer__r.Picture__c}>
+                        <img class="titlePhoto" src={images.organizer} alt="Event Organizer">
+                    </template>
+                    <template if:true={__eventDetails.Event_Organizer__r.Picture__c}>
+                        <img class="titlePhoto" src={__eventDetails.Event_Organizer__r.Picture__c} alt="Event Organizer">
+                    </template>
+                </p>
+                <p>
+                    {__eventDetails.Event_Organizer__r.Name}
+                </p>
+                <p>
+                    {__eventDetails.Event_Organizer__r.Company__c}
+                </p>
+                <p>
+                    {__eventDetails.Event_Organizer__r.ShortIntro__c}
+                </p>
+            </div>
+
+            <!-- Contact Us Modal start -->
+            
+            <div class="custom-modal" if:true={__showContactModal} >
+                <section role="dialog" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header">
+                            <h2 class="slds-text-heading_medium slds-hyphenate">Contact Us</h2>
+                        </header>
+                        <div class="slds-modal__content slds-var-p-around_medium">
+                            <c-contact-us-component 
+                                organizer-email={__eventDetails.Event_Organizer__r.Email__c}
+                                event-id={__eventDetails.Id}
+                                organizer-owner={__eventDetails.Event_Organizer__r.OwnerId}
+                                onsuccess={handleContactUsSuccess} 
+                                oncancel={handleContactCancel} >
+                            </c-contact-us-component>
+                        </div>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+
+            <!-- Contact Us Modal End -->
+
+            <!-- Contact us -->
+            <div class="contactUs slds-var-p-around_large">
+                <lightning-button variant="brand" icon-name="standard:email" label="Contact Us" title="Contact Us" 
+                    onclick={handleContactUs}>
+                </lightning-button>
+            </div>
+        </template>
+    </div>
+</template>

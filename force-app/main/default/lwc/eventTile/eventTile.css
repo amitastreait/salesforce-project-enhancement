@@ -1,0 +1,22 @@
+img {
+    width: 150px;
+    height: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 50%;
+}
+
+.content {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.eventDiv:hover {
+    cursor: pointer;
+    border: 2px solid lightblue;
+    border-radius: 25px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
